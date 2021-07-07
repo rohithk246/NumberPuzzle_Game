@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.*;
 
 class CustomNumberPuzzleControl extends NumberPuzzleControl {
 	public int getWidth() {
@@ -36,27 +37,45 @@ class CustomNumberPuzzleControl extends NumberPuzzleControl {
 		Button buttonClicked = game.getButtonClicked();
 		Button[] buttons = game.getButtons();
 		
-		//Your logic here		
+		// Index of clicked button
+		int index = 0;
+		for(int i=0;i<=15;i++) {
+			if(buttons[i].getLabel().equals(buttonClicked.getLabel())) {
+				index = i;
+				break;
+			}
+		}
+		
+		// Checking if clicked button is adjacent to empty cell
+		if(index+1 == emptyCellId || index-1 == emptyCellId || index+4 == emptyCellId || index-4 == emptyCellId) {
+			swapButton(buttons[emptyCellId], buttonClicked);
+			return index;
+		}
 		
 		return emptyCellId;
-
 	}
 	public int[] getRandomNumbersForGrid() {
 		int arr[] = new int[15];
 		
-		//Your logic here
-		int a = getRandomNumber();
+		// Set to store non-duplicate values
+		Set<Integer> generated = new LinkedHashSet<Integer>();
 		
+		while(generated.size()<15) {
+			int a = getRandomNumber()%15 + 1;
+			generated.add(a);
+		}
+		
+		int n = 0;
+		for(int i : generated) {
+			arr[n++] = i;
+		}
 		
 		return arr;
 	}
 	public boolean checkForWinner(Button[] buttons)
 	{
-		boolean winner = true;
+		int arr[] = getIntegerArrayOfButtonIds(buttons);
 		
-		// Your Logic here
-		getIntegerArrayOfButtonIds(buttons);
-
-		return winner;
+		return Arrays.equals(arr, new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15});
 	}
 }
